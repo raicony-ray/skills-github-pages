@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod Menu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #222;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            flex-direction: column;
+        }
+
+        /* Responsividade para dispositivos móveis */
+        @media (max-width: 768px) {
+            .menu {
+                width: 80%;
+                padding: 10px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                margin-bottom: 10px;
+            }
+        }
+
+        .menu {
+            width: 350px;
+            background: #1e1e1e;
+            border-radius: 15px;
+            padding: 15px;
+            border: 2px solid #6a0dad;
+            box-shadow: 0px 0px 20px rgba(138, 43, 226, 0.7);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu h3 {
+            text-align: center;
+            background: linear-gradient(45deg, #6a0dad, #800080);
+            padding: 12px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 12px 12px 0 0;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            background: #333;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 6px;
+            background: #444;
+            color: white;
+            transition: background 0.3s, transform 0.3s;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .tab:hover {
+            background: #6a0dad;
+            transform: scale(1.05);
+        }
+
+        .tab.active {
+            background: #800080;
+            box-shadow: 0px 0px 10px rgba(138, 43, 226, 0.8);
+        }
+
+        .section {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #333;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #444;
+            border-radius: 8px;
+            margin: 6px 0;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .option:hover {
+            background: #555;
+            transform: scale(1.02);
+        }
+
+        .toggle-btn {
+            background: #6a0dad;
+            border: none;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+
+        .toggle-btn.active {
+            background: #32cd32;
+            box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.6);
+        }
+
+        .toggle-btn:hover {
+            background: #8a2be2;
+        }
+
+        .toggle-btn:disabled {
+            background: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .light-theme {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Notification Box */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #32cd32;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 9999;
+            display: none;
+        }
+
+        /* Circle FOV */
+        #fovCircle {
+            position: absolute;
+            border: 2px solid #32cd32;
+            border-radius: 50%;
+            display: none;
+        }
+
+        /* Button to open panel */
+        .open-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .open-btn:hover {
+            background-color: #800080;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <button class="open-btn" onclick="togglePanel()">+</button>
+
+    <div class="menu">
+        <h3>RAY CHEATS</h3>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('aimbot')">Aimbot</div>
+            <div class="tab" onclick="switchTab('esp')">ESP</div>
+            <div class="tab" onclick="switchTab('bypass')">Bypass</div>
+        </div>
+
+        <!-- Aimbot Section -->
+        <div class="section active" id="aimbot">
+            <div class="option">
+                <span>Ativar Aimbot</span>
+                <button class="toggle-btn" id="aimbotBtn" onclick="toggleAimbot()">Desativado</button>
+            </div>
+            <div class="option">
+                <span>ESP Linha</span>
+                <button class="toggle-btn" onclick="toggleOption(this)">OFF</button>
+            </div>
+            <div class="option">
+                <span>ESP Caixa</span>
+                <button class="toggle-btn" onclick="toggleOption(this)">OFF</button>
+            </div>
+            <div class="option">
+                <span>ESP Esqueleto</span>
+                <button class="toggle-btn" onclick="toggleOption(this)">OFF</button>
+            </div>
+            <div class="option">
+                <span>ESP Nome</span>
+                <button class="toggle-btn" onclick="toggleOption(this)">OFF</button>
+            </div>
+            <div class="option">
+                <span>ESP Vida</span>
+                <button class="toggle-btn" onclick="toggleOption(this)">OFF</button>
+            </div>
+
+            <div class="option">
+                <span>Escolher Ponto de Mira</span>
+                <select class="toggle-btn" id="targetPoint" onchange="changeTargetPoint()">
+                    <option value="head">Cabeça</option>
+                    <option value="neck">Pescoço</option>
+                    <option value="hip">Quadril</option>
+                </select>
+            </div>
+
+            <div class="option">
+                <span>Regular FOV</span>
+                <input type="range" id="fovRange" min="30" max="120" value="90" onchange="updateFov(this.value)">
+                <span id="fovValue">FOV: 90</span>
+            </div>
+
+            <div class="option">
+                <span>Exibir Círculo FOV</span>
+                <button class="toggle-btn" id="fovToggle" onclick="toggleFovCircle()">OFF</button>
+            </div>
+        </div>
+
+        <!-- ESP Section -->
+        <div class="section" id="esp">
+            <div class="option">
+                <span>Esconder Painel</span>
+                <button class="toggle-btn" onclick="togglePanel()">OFF</button>
+            </div>
+        </div>
+
+        <!-- Bypass Section -->
+        <div class="section" id="bypass">
+            <div class="option">
+                <span>Bypass Anti-Cheat</span>
+                <button class="toggle-btn" onclick="toggleOption(this)">OFF</button>
+            </div>
+        </div>
+
+        <!-- Toggle Theme -->
+        <div class="section">
+            <div class="option">
+                <span>Alternar Tema</span>
+                <button class="toggle-btn" onclick="toggleTheme()">Mudar Tema</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Box -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let isPanelVisible = false;
+
+        // Função para mostrar um alerta visual
+        function showAlert(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 2000); // Remove após 2 segundos
+        }
+
+        // Função para alternar o Aimbot
+        function toggleAimbot() {
+            const aimbotBtn = document.getElementById('aimbotBtn');
+            aimbotBtn.classList.toggle('active');
+            aimbotBtn.innerText = aimbotBtn.classList.contains('active') ? 'Ativado' : 'Desativado';
+            showAlert(aimbotBtn.classList.contains('active') ? 'Aimbot Ativado' : 'Aimbot Desativado');
+        }
+
+        // Função para alternar as opções de ESP, Bypass, etc.
+        function toggleOption(button) {
+            button.classList.toggle('active');
+            button.textContent = button.classList.contains('active') ? 'ON' : 'OFF';
+            showAlert(button.classList.contains('active') ? button.previousElementSibling.textContent + ' Ativado' : button.previousElementSibling.textContent + ' Desativado');
+        }
+
+        // Função para alternar abas
+        function switchTab(tabId) {
+            // Remover as classes 'active' de todas as abas e seções
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+
+            // Ativar a aba e seção correta
+            document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Função para alternar a visibilidade do painel
+        function togglePanel() {
+            const menu = document.querySelector('.menu');
+            isPanelVisible = !isPanelVisible; // Alterna o estado
+
+            if (isPanelVisible) {
+                menu.style.display = 'block'; // Exibe o painel
+                setTimeout(() => menu.style.opacity = 1, 10);  // Suaviza a transição de opacidade
+            } else {
+                menu.style.opacity = 0;  // Transição suave de opacidade
+                setTimeout(() => menu.style.display = 'none', 300); // Após a animação, esconde o painel
+            }
+        }
+
+        // Função para alternar o tema
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+        }
+
+        // Função para mudar o ponto de mira do Aimbot (somente se o Aimbot estiver ativado)
+        function changeTargetPoint() {
+            const aimbotBtn = document.getElementById('aimbotBtn');
+            if (!aimbotBtn.classList.contains('active')) {
+                showAlert('Ative o Aimbot primeiro para selecionar o ponto de mira!');
+                return;
+            }
+
+            const targetPoint = document.getElementById('targetPoint').value;
+            showAlert(`Ponto de mira alterado para: ${targetPoint.charAt(0).toUpperCase() + targetPoint.slice(1)}`);
+        }
+
+        // Função para atualizar o FOV
+        function updateFov(value) {
+            document.getElementById('fovValue').textContent = `FOV: ${value}`;
+            const fovCircle = document.getElementById('fovCircle');
+            fovCircle.style.width = `${value * 2}px`;
+            fovCircle.style.height = `${value * 2}px`;
+            fovCircle.style.left = `calc(50% - ${value}px)`;
+            fovCircle.style.top = `calc(50% - ${value}px)`;
+        }
+
+        // Função para exibir/ocultar o círculo de FOV
+        function toggleFovCircle() {
+            const fovCircle = document.getElementById('fovCircle');
+            const fovToggle = document.getElementById('fovToggle');
+            const fovValue = document.getElementById('fovRange').value;
+            fovToggle.classList.toggle('active');
+            fovToggle.textContent = fovToggle.classList.contains('active') ? 'ON' : 'OFF';
+
+            if (fovToggle.classList.contains('active')) {
+                fovCircle.style.display = 'block';
+                fovCircle.style.width = `${fovValue * 2}px`;
+                fovCircle.style.height = `${fovValue * 2}px`;
+                fovCircle.style.left = `calc(50% - ${fovValue}px)`;
+                fovCircle.style.top = `calc(50% - ${fovValue}px)`;
+            } else {
+                fovCircle.style.display = 'none';
+            }
+        }
+    </script>
+
+    <!-- FOV Circle Element -->
+    <div id="fovCircle"></div>
+    </a>
+</body>
+</html>
